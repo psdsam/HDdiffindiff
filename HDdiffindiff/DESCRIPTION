@@ -1,0 +1,12 @@
+Package: HDdiffindiff
+Type: Package
+Title: High Dimensional Doubly Robust Diff-in-Diff Estimator
+Version: 0.1.0
+Author: Sida Peng
+Maintainer: Sida Peng <sidpeng@microsoft.com>
+Description: Perform doubly robust diff-in-diff estimator under high dimesional covariates
+Depends: MASS, flare, glmnet
+License: MIT
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1

@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1595451203822.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "ACEEB25A",
+    "lastKnownWriteTime" : 1532986985,
+    "last_content_update" : 1595451529120,
+    "path" : "C:/Users/sidpeng/Dropbox/Forrest_Sida/SIR/SIRbound/R/SIRbound.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "2,52",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1595450977733.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "FFC2EAAC",
+    "lastKnownWriteTime" : 1593009295,
+    "last_content_update" : 1593009295,
+    "path" : "C:/Users/sidpeng/Dropbox/diffindiff/Simulation/result/simulationexpcompare_crossfit_9.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "84,20",
+        "scrollLine" : "79"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

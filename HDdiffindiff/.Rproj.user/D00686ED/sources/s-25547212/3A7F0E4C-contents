@@ -1,0 +1,107 @@
+#' Perform doubly robust diff-in-diff estimator under high dimesional covariates
+#' @import glmnet MASS flare
+#' @importFrom glmnet glmnet cv.glmnet
+#' @importFrom flare sugm sugm.select
+#' @importFrom MASS mvrnorm
+#' @param y0 outcome at time 0
+#' @param y1 outcome at time 1
+#' @param treat treatment status at time 1
+#' @param x pretreatment high dimensional covariates
+#' @param z pretreatment low diemsioanl covariates allowing nonparametric specification
+#' @param k number of sample split: default is 3
+#' @param method basis function in nonparametric specification:
+#' \itemize{
+#' \item (default) Pol: Polynomial basis with parameter q/2 as the degree of polynomial;
+#' \item Tri: Trigonometric polynomials with parameter q/2 as the degree of polynomial;
+#' }
+#' @param q paramter for the basis function in nonparametric specification
+#' @return
+#' \item{xdebias}{debiased estimator for the high dimensional coefficients}
+#' \item{gdebias}{debiased estimator for the nonparametric coefficients}
+#' \item{stdx}{standard error for the high dimensional coefficients}
+#' \item{stdg}{standard error for the nonparametric coefficients}
+#' @author Sida Peng
+#' @export
+
+highdimdiffindiff_crossfit <- function(y0, y1, treat, x, z, k=3, method = "Pol", q){
+  kk = dim(x)
+  n0 = kk[1]
+  p = kk[2]
+  idx = c(1:n0)
+  group = ceiling(idx/ceiling(n0/k))
+  xdebias = rep(0, p)
+  gdebias = rep(0, q)
+  stdx = rep(0, p)
+  stdg = rep(0, q)
+  for (i in 1:k){
+     zsample1 = z[group!=i]
+     xsample1 = x[group!=i,]
+     y0sample1 = y0[group!=i]
+     y1sample1 = y1[group!=i]
+     treatsample1 = treat[group!=i]
+
+     zsample2 = z[group==i]
+     xsample2 = x[group==i,]
+     y0sample2 = y0[group==i]
+     y1sample2 = y1[group==i]
+     treatsample2 = treat[group==i]
+
+     ff = highdimdiffindiff_crossfit_inside(y0sample1, y1sample1, treatsample1, xsample1, zsample1, y0sample2, y1sample2, treatsample2, xsample2, zsample2, method, q)
+     xdebias = xdebias+ff$xdebias
+     gdebias = gdebias + ff$gdebias
+     stdx = stdx+ff$stdx^2
+     stdg = stdg+ff$stdg^2
+  }
+  output = list("xdebias" = xdebias/k,
+                "gdebias" = gdebias/k,
+                "stdx" = sqrt(stdx/(k^2)),
+                "stdg" = sqrt(stdg/(k^2)))
+
+  return(output)
+
+}
+
+
+
+############################################################################
+sieve.Pol <- function(X, J_n){
+  return(unname(outer(X, 0:J_n, "^")));
+}
+
+############################################################################
+#Trigonometric polynomials
+#This function takes input vector x, and degree J_n and returns trigonometryic
+#polynomials on [0,1] of degree J_n
+sieve.TriPol <- function(X, J_n){
+  if (J_n < 1){
+    stop("J_n need to be at least 1");
+  }
+  basis <- rep(1,length(X));
+  for(k in 1:J_n){
+    basis <- cbind(basis, cos(2*k*pi*X), sin(2*k*pi*X));
+  }
+  return(unname(basis));
+} #sieve.TriPol
+#This function takes input vector x, degree J_n and order of derivative d and
+#returns the derivative of the trigonometric polynomial basis
+sieve.TriPol.D <- function(X, J_n, d){
+  if (J_n < 1){
+    stop("J_n need to be at least 1");
+  }
+  basis <- rep(0,length(X));
+  if(d==1){
+    for(k in 1:J_n){
+      basis <- cbind(basis, -2*k*pi*sin(2*k*pi*X), 2*k*pi*cos(2*k*pi*X));
+    } #end for loop
+  } #end d==1
+  else{
+    for(k in 1:J_n){
+      basis <- cbind(basis, -4*k^2*pi^2*cos(2*k*pi*X),
+                     -4*k^2*pi^2*sin(2*k*pi*X));
+    } #end for loop
+  } #end d==1
+  return(unname(basis));
+} #end sieve.TriPol.D
+############################################################################
+
+

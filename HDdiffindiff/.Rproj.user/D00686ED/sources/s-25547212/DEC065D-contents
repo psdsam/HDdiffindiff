@@ -1,0 +1,102 @@
+#' SIRbound_example plots the example in README.me
+#' @param parms Contain contagion and mortality rate
+#' @param x0 Contain initial state of the world
+#' @param tf Time of the infection process
+#' @author Forrest Crawford and Sida Peng
+#' @export SIRbound_example
+#'
+SIRbound_example <- function(parms, x0, tf){
+
+nu <- matrix(c(-1,0,1,-1,0,1),nrow=3,byrow=T) # State-change matrix
+a  <- c("beta*S*I", "gamma*I")                # Propensity vector
+simName <- "Kermack-McKendrick SIR"
+
+# total population size
+N = sum(x0)
+
+# simulate system
+out <- ssa(x0,a,nu,parms,tf,method="D",simName,verbose=FALSE,consoleInterval=1)
+
+# extract compartments
+ts = as.numeric(out$data[,1])
+S = as.numeric(out$data[,2])
+I = as.numeric(out$data[,3])
+R = as.numeric(out$data[,4])
+
+nevents = length(ts)
+
+# get step functions
+x = c(ts[1],rep(ts[2:(nevents-1)],each=2), ts[nevents])
+yS = rep(S[1:(nevents-1)],each=2)
+yI = rep(I[1:(nevents-1)],each=2)
+yR = rep(R[1:(nevents-1)],each=2)
+
+#####################################
+# plotting setup
+
+par(mar=c(4,4,4,1), bty="n", cex=1.2)
+par(mfrow=c(2,3))
+
+#####################################
+# Different observation regimes
+
+# Continuous realization
+plot(0, xlim=c(0,max(ts)), ylim=c(0,N), type="n", ylab="People", xlab="Time", main="Continuous observation of S(t), I(t), R(t)")
+lines(x,yS, lwd=2, col="green")
+lines(x,yI, lwd=2, col="red")
+lines(x,yR, lwd=2, col="blue")
+legend(1.0, N, c("S(t)", "I(t)", "R(t)"), lty=1, lwd=2, col=c("green", "red", "blue"), bty="n", cex=1.3)
+
+# Continuous observation of I(t) only
+plot(0, xlim=c(0,max(ts)), ylim=c(0,N), type="n", ylab="People", xlab="Time", main="Continuous observation of I(t)")
+lines(x,yI, lwd=2, col="red")
+legend(1.0, N, c("I(t)"), lty=1, lwd=2, col=c("red"), bty="n", cex=1.3)
+
+# Continuous observation of R(t) only
+plot(0, xlim=c(0,max(ts)), ylim=c(0,N), type="n", ylab="People", xlab="Time", main="Continuous observation of R(t)")
+lines(x,yR, lwd=2, col="blue")
+legend(1.0, N, c("R(t)"), lty=1, lwd=2, col=c("blue"), bty="n", cex=1.3)
+
+# Continuous observation of R(t) and some S->I, S(0) and S(T)
+plot(0, xlim=c(0,max(ts)), ylim=c(0,N), type="n", ylab="People", xlab="Time", main="Continuous observation of R(t), S(0), S(T), and some S->I")
+lines(x,yR, lwd=2, col="blue")
+points(c(0,max(ts)) ,c(S[1], S[nevents]), pch=16, cex=1.3, col="green")
+p = 0.1
+for(i in 1:nevents) {
+  if(runif(1)<p) points(ts[i], 0, pch=4, cex=1.3, col="red")
+}
+legend(1.0, N, c("S(t)", "S->I transitions", "R(t)"), lty=c(NA,NA,1), pch=c(16,4,NA), lwd=c(NA,1,2), col=c("green", "red", "blue"), bty="n", cex=1.3)
+
+
+
+# Discrete observation of (S(t),I(t),R(t))
+plot(0, xlim=c(0,max(ts)), ylim=c(0,N), type="n", ylab="People", xlab="Time", main="Discrete observation of S(t), I(t), R(t)")
+
+tsamples = runif(20, min=0,max=max(ts))
+for(i in 1:length(tsamples)) {
+  ti = tsamples[i]
+  indices = which(ts<=ti)
+  idx = indices[length(indices)]
+  points(ti, S[idx], col="green", pch=16, cex=1.3)
+  points(ti, I[idx], col="red", pch=16, cex=1.3)
+  points(ti, R[idx], col="blue", pch=16, cex=1.3)
+}
+
+legend(1.0, N, c("S(t)", "I(t)", "R(t)"), pch=16, col=c("green", "red", "blue"), bty="n", cex=1.3)
+
+
+# Discrete observation of I(t) and S(0) and S(t)
+plot(0, xlim=c(0,max(ts)), ylim=c(0,N), type="n", ylab="People", xlab="Time", main="Discrete observation of I(t), S(0), S(T)")
+
+tsamples = runif(20, min=0,max=max(ts))
+for(i in 1:length(tsamples)) {
+  ti = tsamples[i]
+  indices = which(ts<=ti)
+  idx = indices[length(indices)]
+  points(ti, I[idx], col="red", pch=16, cex=1.3)
+}
+
+points(c(0,max(ts)) ,c(S[1], S[nevents]), pch=16, cex=1.3, col="green")
+legend(1.0, N, c("S(t)", "I(t)"), pch=16, col=c("green", "red"), bty="n", cex=1.3)
+
+}
