@@ -7,6 +7,7 @@ If you use this package, please cite our article below:
 To install this package
 ```R
 library(devtools) 
+install_version("flare","1.6.0")
 install_github("psdsam/HDdiffindiff")
 ```
 
