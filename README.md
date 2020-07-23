@@ -19,7 +19,7 @@ Examplehighdimdiffindiff: Implement a simple example to demonstrate the method.
 
 Example usage:
 ```R
-f = Examplehighdimdiffindiff(n=1000)
+f = Examplehighdimdiffindiff(n0=1000)
 ```
 
 
