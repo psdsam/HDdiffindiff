@@ -11,6 +11,14 @@ Examplehighdimdiffindiff(p = 50, q = 8, n0 = 500, method = "Pol", rho.X = 0.5)
 
 \item{q}{parameter for the nonparametric specification}
 
+\item{n0}{number of sample size}
+
+\item{method}{basis function in nonparametric specification:
+\itemize{
+\item (default) Pol: Polynomial basis with parameter q/2 as the degree of polynomial;
+\item Tri: Trigonometric polynomials with parameter q/2 as the degree of polynomial;
+}}
+
 \item{rho.X}{parameter to construct the correlation matrix for the high dimensional covariates}
 }
 \description{

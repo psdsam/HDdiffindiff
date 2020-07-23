@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1595511659242.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "6E1C7166",
+    "lastKnownWriteTime" : 1595511695,
+    "last_content_update" : 1595511695930,
+    "path" : "~/GitHub/HDdiffindiff/R/highdimdiffindiff_crossfit.R",
+    "project_path" : "R/highdimdiffindiff_crossfit.R",
+    "properties" : {
+        "cursorPosition" : "12,0",
+        "scrollLine" : "12"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
