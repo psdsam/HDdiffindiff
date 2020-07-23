@@ -9,6 +9,7 @@ To install this package
 library(devtools) 
 install_version("flare","1.6.0")
 install_github("psdsam/HDdiffindiff")
+library(HDdiffindiff)
 ```
 
 The functions in this package are:
